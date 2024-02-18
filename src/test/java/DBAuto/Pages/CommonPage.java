@@ -14,11 +14,13 @@ import static org.junit.Assert.assertTrue;
 public class CommonPage {
 
     String currentUrl;
-    WebDriverWait waiter ;
+    WebDriverWait waiter;
+
     @Step("Validation of URL")
-    public void validateUrl(String url) {
+    public CommonPage validateUrl(String url) {
         currentUrl = WebDriverRunner.getWebDriver().getCurrentUrl();
         assertTrue(currentUrl.contains(url));
+        return this;
     }
 
 

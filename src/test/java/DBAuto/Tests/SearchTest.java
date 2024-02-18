@@ -16,26 +16,26 @@ public class SearchTest {
     CommonPage commonPage = new CommonPage();
 
 
-    @Description ("Smoke test for search")
+    @Description("Smoke test for search")
     @ParameterizedTest
     @CsvFileSource(files = "src/test/java/DBAuto/resources/cities.csv", numLinesToSkip = 1)
     public void checkMainSearch(String startPoint, String endPoint) {
         try {
-            landingPage.openLandingPage();
-            landingPage.allowCookies();
-            landingPage.enterSearchPoints(startPoint, endPoint);
-            searchPage.search();
-            searchPage.validateTableResult(startPoint, endPoint);
-        } catch (Throwable error ){
+            landingPage.openLandingPage()
+                    .allowCookies()
+                    .enterSearchPoints(startPoint, endPoint);
+            searchPage.search()
+                    .validateTableResult(startPoint, endPoint);
+        } catch (Throwable error) {
             Allure.step(error.getMessage());
-            Allure.attachment("error screen",commonPage.attachScreenshot() );
+            Allure.attachment("error screen", commonPage.attachScreenshot());
             throw error;
         }
     }
 
     @Description("Check round trip with parameters")
     @Test
-    public void searchRoundTripWithParameters(){
+    public void searchRoundTripWithParameters() {
         String startPointValue = "Bonn";
         String endPointValue = "Hamburg";
         int daysToAddToStart = 2;
@@ -46,22 +46,22 @@ public class SearchTest {
         String lastName = "Tymoshenko";
         String email = "Kunde.karla@gmx.de";
         try {
-            landingPage.openLandingPage();
-            landingPage.allowCookies();
-            landingPage.enterSearchPoints(startPointValue, endPointValue);
-            landingPage.selectStartDate(daysToAddToStart, formatWithYear);
-            landingPage.selectReturnDate(daysToAddToReturn,formatWithYear);
-            landingPage.addPassenger();
-            landingPage.checkSelectedParameters(daysToAddToStart,daysToAddToReturn, formatWithoutYear,3);
-            searchPage.search();
-            searchPage.validateTableResult(startPointValue,endPointValue);
-            searchPage.ticketSelection(daysToAddToReturn,formatWithoutYear);
-            searchPage.classOfferSelection();
-            searchPage.withoutLoginSelection();
-            searchPage.enterCustomerData(name,lastName,email);
-        } catch (Throwable error ){
+            landingPage.openLandingPage()
+                    .allowCookies()
+                    .enterSearchPoints(startPointValue, endPointValue)
+                    .selectStartDate(daysToAddToStart, formatWithYear)
+                    .selectReturnDate(daysToAddToReturn, formatWithYear)
+                    .addPassenger()
+                    .checkSelectedParameters(daysToAddToStart, daysToAddToReturn, formatWithoutYear, 3);
+            searchPage.search()
+                    .validateTableResult(startPointValue, endPointValue)
+                    .ticketSelection(daysToAddToReturn, formatWithoutYear)
+                    .classOfferSelection()
+                    .withoutLoginSelection()
+                    .enterCustomerData(name, lastName, email);
+        } catch (Throwable error) {
             Allure.step(error.getMessage());
-            Allure.attachment("error screen",commonPage.attachScreenshot() );
+            Allure.attachment("error screen", commonPage.attachScreenshot());
             throw error;
         }
 

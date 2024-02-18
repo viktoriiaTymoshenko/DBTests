@@ -24,7 +24,7 @@ public class SearchPage extends CommonPage {
     private By offersStep = By.xpath("//*[@data-page='Angebote']");
     private By classOfferSelectionButton = By.cssSelector(".angebot-details-buttons__auswaehlen");
     private By seatReservCheckbox = By.cssSelector(".platzreservierung-label");
-            //By.cssSelector("#reservierung [type='checkbox']");
+    //By.cssSelector("#reservierung [type='checkbox']");
     private By confirmOffersBtn = By.id("btn-weiter");
     private String customerUrl = "/kundendaten";
     private By withoutLoginBox = By.xpath("//*[@for = 'anmeldungauswahl-anonym']");
@@ -38,38 +38,48 @@ public class SearchPage extends CommonPage {
     private By ticketPoints(String ort) {
         return By.xpath("//span[@title = '" + ort + " Hbf']");
     }
+
     @Step("Start search")
-    public void search() {
+    public SearchPage search() {
         $(searchButton).shouldBe(Condition.enabled).click();
         waiter = new WebDriverWait(webdriver().object(), Duration.ofSeconds(10));
+        return this;
     }
 
     @Step("Validate table with result of search")
-    public void validateTableResult(String startPointValue, String endPointValue) {
+    public SearchPage validateTableResult(String startPointValue, String endPointValue) {
         $$(reiseElementItem).first().shouldBe(visible).shouldHave(Condition.partialText(startPointValue), Condition.partialText(endPointValue));
+        return this;
     }
+
     @Step("Ticket selection")
-    public void ticketSelection(int date, String format){
+    public SearchPage ticketSelection(int date, String format) {
         $(applyTicketButton).shouldBe(visible).click();
-        $(ticketListDateHeader).should(have(text(landingPage.generateDate(date,format))));
+        $(ticketListDateHeader).should(have(text(landingPage.generateDate(date, format))));
         $(applyTicketButton).shouldBe(visible).click();
         $(offersStep).shouldBe(visible);
+        return this;
     }
+
     @Step("Select class of the trip")
-    public void classOfferSelection(){
+    public SearchPage classOfferSelection() {
         $(classOfferSelectionButton).shouldBe(Condition.enabled).click();
         $(seatReservCheckbox).shouldBe(Condition.enabled).click();
         waiter.until(ExpectedConditions.elementToBeClickable($(confirmOffersBtn)));
         $(confirmOffersBtn).shouldBe(enabled).click();
+        return this;
     }
+
     @Step("Select seat")
-    public void withoutLoginSelection(){
+    public SearchPage withoutLoginSelection() {
         waiter.until(ExpectedConditions.elementToBeClickable($(withoutLoginBox)));
         $(withoutLoginBox).shouldBe(visible).shouldBe(enabled).click();
         $(confirmOffersBtn).shouldBe(Condition.enabled).click();
+        return this;
     }
+
     @Step("Enter customer data")
-    public void enterCustomerData(String firstName, String lastName, String email){
+    public SearchPage enterCustomerData(String firstName, String lastName, String email) {
         $(title).shouldBe(enabled).click();
         waiter = new WebDriverWait(webdriver().object(), Duration.ofSeconds(5));
         $(frauTitleOption).shouldBe(enabled).click();
@@ -79,6 +89,7 @@ public class SearchPage extends CommonPage {
         $(confirmOffersBtn).shouldBe(Condition.enabled).click();
         waiter.until(ExpectedConditions.urlContains(url));
         validateUrl(url);
+        return this;
     }
 
 

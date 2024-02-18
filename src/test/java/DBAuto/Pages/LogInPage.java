@@ -18,20 +18,24 @@ public class LogInPage extends CommonPage {
     private By title = By.cssSelector("#kc-page-title .login-view");
 
     @Step("Navigation to the login page")
-    public void login(){
+    public LogInPage login() {
         $(loginButton).shouldBe(Condition.enabled).click();
         validateUrl(url);
         $(title).shouldBe(Condition.visible);
+        return this;
     }
+
     @Step("Enter user name and check that password button is presented")
-    public void enterUserName(String user){
+    public LogInPage enterUserName(String user) {
         $(usernameField).shouldBe(Condition.visible).setValue(user);
         $(accessButton).shouldBe(Condition.visible).click();
+        return this;
     }
 
     @Story("Return to the main page")
-    public void returnToMainPage(){
+    public LandingPage returnToMainPage() {
         $(backButton).shouldBe(Condition.visible).click();
+        return new LandingPage();
     }
 
 }

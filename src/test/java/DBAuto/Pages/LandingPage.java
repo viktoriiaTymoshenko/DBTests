@@ -30,6 +30,7 @@ public class LandingPage extends CommonPage {
     String mainUrl = "https://www.bahn.de/";
     private By startPointField = By.name("quickFinderBasic-von");
     private By endPointField = By.name("quickFinderBasic-nach");
+
     private By PointDDvalue(String ort) {
         return By.xpath("//*[contains(@data-value, '" + ort + " Hbf')]");
     }
@@ -52,50 +53,57 @@ public class LandingPage extends CommonPage {
     String targetShadowElement = ".js-accept-all-cookies";
 
     @Step("Open DB main page")
-    public void openLandingPage() {
+    public LandingPage openLandingPage() {
         open(mainUrl);
         waiter = new WebDriverWait(webdriver().object(), Duration.ofSeconds(5));
         currentUrl = WebDriverRunner.getWebDriver().getCurrentUrl();
         validateUrl(mainUrl);
+        return this;
     }
+
     @Step("Accept cookies")
-    public void allowCookies() {
-        try{
-            waiter.until(ExpectedConditions.elementToBeClickable(ByShadow.cssSelector(targetShadowElement,hostShadowElement)));
+    public LandingPage allowCookies() {
+        try {
+            waiter.until(ExpectedConditions.elementToBeClickable(ByShadow.cssSelector(targetShadowElement, hostShadowElement)));
             SelenideElement element = $(ByShadow.cssSelector(targetShadowElement, hostShadowElement));
             element.click();
-        }catch (TimeoutException e){
+        } catch (TimeoutException e) {
             System.out.println("No cookie dialog");
-        }}
+        }
+        return this;
+    }
 
     @Step("Enter start point {startPointValue} and end point {endPointValue}")
-    public void enterSearchPoints(String startPointValue, String endPointValue) {
-        if (!($(startPointField).is(empty))){
+    public LandingPage enterSearchPoints(String startPointValue, String endPointValue) {
+        if (!($(startPointField).is(empty))) {
             $(clearStartIcon).shouldBe(visible).click();
         }
         $(startPointField).shouldBe(Condition.enabled).setValue(startPointValue);
         $(PointDDvalue(startPointValue)).shouldBe(Condition.enabled).click();
-        if (!($(endPointField).is(empty))){
+        if (!($(endPointField).is(empty))) {
             $(clearReturnIcon).shouldBe(visible).click();
         }
         $(endPointField).shouldBe(Condition.enabled).setValue(endPointValue);
         $(PointDDvalue(endPointValue)).shouldBe(Condition.enabled).click();
-
+        return this;
     }
+
     @Step("Select start date")
-    public void selectStartDate(int day, String format){
+    public LandingPage selectStartDate(int day, String format) {
         $(calendarStart).shouldBe(Condition.visible).click();
         $(dataEnterField).shouldBe(Condition.enabled).click();
-        $(dataEnterField).sendKeys(generateDate(day,format));
+        $(dataEnterField).sendKeys(generateDate(day, format));
         $(acceptButton).shouldBe(Condition.enabled).click();
+        return this;
     }
+
     @Step("Select return date")
-    public void selectReturnDate(int day, String format){
+    public LandingPage selectReturnDate(int day, String format) {
         $(calendarReturn).shouldBe(Condition.visible).click();
         $(dataEnterField).shouldBe(Condition.enabled).click();
-        $(dataEnterField).sendKeys(generateDate(day,format));
+        $(dataEnterField).sendKeys(generateDate(day, format));
         $(acceptButton).shouldBe(Condition.enabled).click();
-
+        return this;
     }
 
     public String generateDate(int daysToAdd, String format) {
@@ -104,8 +112,9 @@ public class LandingPage extends CommonPage {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern(format, Locale.GERMAN);
         return futureDate.format(formatter);
     }
+
     @Step("Select passengers ")
-    public void addPassenger(){
+    public LandingPage addPassenger() {
         $(addPassenger).shouldBe(Condition.enabled).click();
         $(addPassengerContainer).shouldBe(Condition.visible);
         $(passengerNumberField).shouldBe(Condition.enabled).click();
@@ -114,14 +123,17 @@ public class LandingPage extends CommonPage {
         $(addNewPassengerType).shouldBe(Condition.enabled).click();
         $(dog).shouldBe(Condition.enabled).click();
         $(acceptButton).click();
+        return this;
     }
+
     @Step("Check selected parameters")
-    public void checkSelectedParameters(int dateStart, int dateReturn, String format, int passengers ){
-        String startDate =generateDate(dateStart, format);
-        String returnDate =generateDate(dateReturn, format);
+    public LandingPage checkSelectedParameters(int dateStart, int dateReturn, String format, int passengers) {
+        String startDate = generateDate(dateStart, format);
+        String returnDate = generateDate(dateReturn, format);
         $(calendarStart).should(have(text(startDate)));
         $(calendarReturn).should(have(text(returnDate)));
         $(addPassenger).should(have(text(String.valueOf(passengers))));
+        return this;
     }
 
 }
