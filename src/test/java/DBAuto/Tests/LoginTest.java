@@ -6,10 +6,7 @@ import DBAuto.Pages.LogInPage;
 import io.qameta.allure.Allure;
 import io.qameta.allure.Description;
 import io.qameta.allure.Epic;
-import io.qameta.allure.Story;
-import org.junit.Test;
-
-import java.util.Collection;
+import org.junit.jupiter.api.Test;
 
 
 @Epic("Login test")

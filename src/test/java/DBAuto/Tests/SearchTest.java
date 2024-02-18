@@ -4,7 +4,9 @@ import DBAuto.Pages.CommonPage;
 import DBAuto.Pages.LandingPage;
 import DBAuto.Pages.SearchPage;
 import io.qameta.allure.*;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.CsvFileSource;
 
 
 @Epic("Ticket search tests")
@@ -15,16 +17,15 @@ public class SearchTest {
 
 
     @Description ("Smoke test for search")
-    @Test
-    public void checkMainSearch() {
-        String startPointValue = "Berlin";
-        String endPointValue = "Düsseldorf";
+    @ParameterizedTest
+    @CsvFileSource(files = "src/test/java/DBAuto/resources/cities.csv", numLinesToSkip = 1)
+    public void checkMainSearch(String startPoint, String endPoint) {
         try {
             landingPage.openLandingPage();
             landingPage.allowCookies();
-            landingPage.enterSearchPoints(startPointValue, endPointValue);
+            landingPage.enterSearchPoints(startPoint, endPoint);
             searchPage.search();
-            searchPage.validateTableResult(startPointValue, endPointValue);
+            searchPage.validateTableResult(startPoint, endPoint);
         } catch (Throwable error ){
             Allure.step(error.getMessage());
             Allure.attachment("error screen",commonPage.attachScreenshot() );
